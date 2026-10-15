@@ -1,0 +1,22 @@
+{
+  "name": "Event Global - Événementiel",
+  "short_name": "Event Global",
+  "description": "Plateforme pour créer, publier et découvrir des évènements, compétitions, cagnottes et billetterie.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#4f46e5",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
