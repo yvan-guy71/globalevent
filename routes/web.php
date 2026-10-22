@@ -23,6 +23,7 @@ Route::get('/evenements', [EventController::class, 'index'])->name('events.index
 Route::get('/evenements/creer', [EventController::class, 'create'])->middleware('auth')->name('events.create');
 Route::post('/evenements', [EventController::class, 'store'])->middleware('auth')->name('events.store');
 Route::get('/mes-evenements', [EventController::class, 'mine'])->middleware('auth')->name('events.mine');
+Route::post('/evenements/{event}/rejoindre', [EventController::class, 'join'])->middleware('auth')->name('events.join');
 Route::get('/evenements/{event}', [EventController::class, 'show'])->name('events.show');
 Route::get('/evenements/{event}/modifier', [EventController::class, 'edit'])->middleware('auth')->name('events.edit');
 Route::put('/evenements/{event}', [EventController::class, 'update'])->middleware('auth')->name('events.update');

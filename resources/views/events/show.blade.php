@@ -226,12 +226,31 @@
                     </div>
                     <div class="text-3xl font-black text-slate-900 dark:text-white">{{ $event->price_label }}</div>
                     <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mt-1">
-                        {{ $event->capacity ? 'Places limitées' : 'Entrée libre' }}
+                        @if($event->capacity)
+                            {{ $event->remaining_places }} place{{ $event->remaining_places > 1 ? 's' : '' }} disponible{{ $event->remaining_places > 1 ? 's' : '' }}
+                        @else
+                            Entrée libre
+                        @endif
                     </p>
                 </div>
 
                 <div class="mt-8 space-y-3">
-                    @if($ticketTypes->count() && !$event->isPast())
+                    @if($event->is_free && !$event->isPast() && auth()->check())
+                        <form action="{{ route('events.join', $event) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600 text-white font-black rounded-2xl hover:bg-emerald-700 transition-colors">
+                                <i class="fa-solid fa-user-plus"></i>
+                                Rejoindre l'évènement
+                            </button>
+                        </form>
+                    @elseif($event->is_free && !$event->isPast())
+                        <a href="{{ route('login') }}"
+                           class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600 text-white font-black rounded-2xl hover:bg-emerald-700 transition-colors">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Se connecter pour rejoindre
+                        </a>
+                    @elseif($ticketTypes->count() && !$event->isPast())
                         <a href="{{ route('orders.create', $event) }}"
                            class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-colors">
                             <i class="fa-solid fa-cart-shopping"></i>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Ticket;
+use App\Models\TicketType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -94,6 +95,77 @@ class EventController extends Controller
         return redirect()
             ->route('events.show', $event)
             ->with('success', 'Votre évènement a été créé avec succès.');
+    }
+
+    public function join(Request $request, Event $event): RedirectResponse
+    {
+        abort_unless($event->status === 'published', 404);
+
+        if ($event->isPast()) {
+            return redirect()->route('events.show', $event)->with('error', 'Cet évènement est terminé.');
+        }
+
+        if (! $event->is_free) {
+            return redirect()->route('orders.create', $event);
+        }
+
+        $existing = Ticket::query()
+            ->where('event_id', $event->id)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if ($existing) {
+            return redirect()->route('tickets.show', $existing)->with('info', 'Vous participez déjà à cet évènement.');
+        }
+
+        $type = $event->ticketTypes()->where('price', '<=', 0)->first();
+
+        if (! $type) {
+            $type = TicketType::create([
+                'event_id' => $event->id,
+                'name' => 'Entrée gratuite',
+                'description' => 'Accès gratuit à l\'évènement.',
+                'price' => 0,
+                'currency' => $event->currency ?: 'FCFA',
+                'quantity' => 100000,
+                'sold' => 0,
+                'is_active' => true,
+                'sort_order' => 0,
+            ]);
+        }
+
+        $order = Order::create([
+            'reference' => Order::generateReference(),
+            'event_id' => $event->id,
+            'user_id' => $request->user()->id,
+            'status' => 'pending',
+            'total_amount' => 0,
+            'currency' => $event->currency ?: 'FCFA',
+        ]);
+
+        $item = $order->items()->create([
+            'ticket_type_id' => $type->id,
+            'quantity' => 1,
+            'unit_price' => 0,
+            'subtotal' => 0,
+        ]);
+
+        $ticket = Ticket::create([
+            'code' => Ticket::generateCode(),
+            'order_id' => $order->id,
+            'order_item_id' => $item->id,
+            'ticket_type_id' => $type->id,
+            'event_id' => $event->id,
+            'user_id' => $request->user()->id,
+            'holder_name' => $request->user()->name,
+            'status' => 'valid',
+        ]);
+
+        $type->increment('sold', 1);
+        $order->update(['total_amount' => 0]);
+        $order->markPaid();
+
+        return redirect()->route('tickets.show', $ticket)->with('success', 'Vous participez maintenant à cet évènement.');
     }
 
     public function show(Event $event): View

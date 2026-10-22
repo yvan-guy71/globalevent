@@ -183,6 +183,17 @@ class Event extends Model
         return (float) $this->price <= 0;
     }
 
+    public function getRemainingPlacesAttribute(): ?int
+    {
+        if (! $this->capacity) {
+            return null;
+        }
+
+        $sold = $this->tickets()->count();
+
+        return max(0, $this->capacity - $sold);
+    }
+
     public function getPriceLabelAttribute(): string
     {
         if ($this->is_free) {
