@@ -104,8 +104,8 @@ class EventController extends Controller
         $request->user()->promoteToOrganizer();
 
         return redirect()
-            ->route('events.show', $event)
-            ->with('success', 'Votre évènement a été créé avec succès.');
+            ->route('ticket-types.index', $event)
+            ->with('success', 'Votre évènement a été créé avec succès. Ajoutez vos catégories de billets (VIP, Standard, etc.) et leurs quantités.');
     }
 
     public function join(Request $request, Event $event): RedirectResponse
