@@ -19,6 +19,17 @@
                    class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white text-indigo-600 font-black rounded-2xl hover:bg-slate-100 transition-colors shrink-0">
                     <i class="fa-solid fa-receipt"></i> Mes commandes
                 </a>
+                <form method="GET" action="{{ route('tickets.index') }}" class="shrink-0">
+                    <select name="event" onchange="this.form.submit()"
+                            class="px-4 py-3 rounded-2xl bg-white text-slate-900 font-bold border-none outline-none">
+                        <option value="">Tous les évènements</option>
+                        @foreach($events as $event)
+                            <option value="{{ $event->id }}" {{ $selectedEvent === $event->id ? 'selected' : '' }}>
+                                {{ $event->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
             </div>
         </div>
     </section>

@@ -10,13 +10,27 @@ class TicketController extends Controller
 {
     public function index(Request $request): View
     {
+        $selectedEvent = $request->integer('event') ?: null;
+
+        $events = $request->user()->tickets()
+            ->with('event')
+            ->get()
+            ->pluck('event')
+            ->filter()
+            ->unique('id')
+            ->values();
+
         $tickets = $request->user()->tickets()
             ->with(['event', 'ticketType', 'order'])
+            ->when($selectedEvent, fn ($query) => $query->where('event_id', $selectedEvent))
             ->latest()
-            ->paginate(12);
+            ->paginate(12)
+            ->withQueryString();
 
         return view('tickets.index', [
             'tickets' => $tickets,
+            'events' => $events,
+            'selectedEvent' => $selectedEvent,
         ]);
     }
 
