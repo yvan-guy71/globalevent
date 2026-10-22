@@ -12,13 +12,13 @@ class AdminUserManagementTest extends TestCase
 
     public function test_guest_is_redirected_to_login(): void
     {
-        $this->get('/admin/utilisateurs')->assertRedirect('/connexion');
+        $this->get('/event-admin/utilisateurs')->assertRedirect('/event-admin/connexion');
     }
 
     public function test_non_admin_cannot_access_user_management(): void
     {
         $this->actingAs(User::factory()->create())
-            ->get('/admin/utilisateurs')
+            ->get('/event-admin/utilisateurs')
             ->assertForbidden();
     }
 
@@ -28,7 +28,7 @@ class AdminUserManagementTest extends TestCase
         $target = User::factory()->create(['name' => 'Awa Candidate', 'email' => 'awa@eventglobal.test']);
 
         $this->actingAs($admin)
-            ->get('/admin/utilisateurs')
+            ->get('/event-admin/utilisateurs')
             ->assertOk()
             ->assertSee('Awa Candidate')
             ->assertSee('awa@eventglobal.test')
@@ -42,7 +42,7 @@ class AdminUserManagementTest extends TestCase
         User::factory()->create(['name' => 'Ama Zenou']);
 
         $this->actingAs($admin)
-            ->get('/admin/utilisateurs?q=Trovato')
+            ->get('/event-admin/utilisateurs?q=Trovato')
             ->assertOk()
             ->assertSee('Kossi Trovato')
             ->assertDontSee('Ama Zenou');
@@ -55,7 +55,7 @@ class AdminUserManagementTest extends TestCase
         User::factory()->create(['name' => 'Client Deux', 'role' => 'client']);
 
         $this->actingAs($admin)
-            ->get('/admin/utilisateurs?role=organisateur')
+            ->get('/event-admin/utilisateurs?role=organisateur')
             ->assertOk()
             ->assertSee('Org Un')
             ->assertDontSee('Client Deux');
@@ -67,7 +67,7 @@ class AdminUserManagementTest extends TestCase
         $user = User::factory()->create(['role' => 'client']);
 
         $this->actingAs($admin)
-            ->put('/admin/utilisateurs/'.$user->id.'/role', ['role' => 'organisateur'])
+            ->put('/event-admin/utilisateurs/'.$user->id.'/role', ['role' => 'organisateur'])
             ->assertRedirect();
 
         $this->assertSame('organisateur', $user->fresh()->role);
@@ -78,7 +78,7 @@ class AdminUserManagementTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($admin)
-            ->put('/admin/utilisateurs/'.$admin->id.'/role', ['role' => 'client'])
+            ->put('/event-admin/utilisateurs/'.$admin->id.'/role', ['role' => 'client'])
             ->assertRedirect()
             ->assertSessionHas('error');
 
@@ -91,7 +91,7 @@ class AdminUserManagementTest extends TestCase
         $user = User::factory()->create(['role' => 'client']);
 
         $this->actingAs($admin)
-            ->put('/admin/utilisateurs/'.$user->id.'/role', ['role' => 'superuser'])
+            ->put('/event-admin/utilisateurs/'.$user->id.'/role', ['role' => 'superuser'])
             ->assertSessionHasErrors('role');
 
         $this->assertSame('client', $user->fresh()->role);
@@ -103,7 +103,7 @@ class AdminUserManagementTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($admin)
-            ->delete('/admin/utilisateurs/'.$user->id)
+            ->delete('/event-admin/utilisateurs/'.$user->id)
             ->assertRedirect();
 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
@@ -114,7 +114,7 @@ class AdminUserManagementTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($admin)
-            ->delete('/admin/utilisateurs/'.$admin->id)
+            ->delete('/event-admin/utilisateurs/'.$admin->id)
             ->assertRedirect()
             ->assertSessionHas('error');
 
@@ -127,11 +127,11 @@ class AdminUserManagementTest extends TestCase
         $target = User::factory()->create(['role' => 'client']);
 
         $this->actingAs($user)
-            ->put('/admin/utilisateurs/'.$target->id.'/role', ['role' => 'admin'])
+            ->put('/event-admin/utilisateurs/'.$target->id.'/role', ['role' => 'admin'])
             ->assertForbidden();
 
         $this->actingAs($user)
-            ->delete('/admin/utilisateurs/'.$target->id)
+            ->delete('/event-admin/utilisateurs/'.$target->id)
             ->assertForbidden();
 
         $this->assertSame('client', $target->fresh()->role);

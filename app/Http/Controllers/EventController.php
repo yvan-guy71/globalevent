@@ -234,7 +234,7 @@ class EventController extends Controller
             'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at', 'before_or_equal:'.$maxDate],
             'venue' => ['required', 'string', 'min:2', 'max:150'],
             'address' => ['nullable', 'string', 'max:180'],
-            'city' => ['required', Rule::in(config('events.cities'))],
+            'city' => ['required', Rule::in(collect(config('events.cities_by_country'))->flatten()->unique()->values()->all())],
             'country' => ['required', Rule::in(config('events.countries'))],
             'price' => ['nullable', 'numeric', 'min:0', 'max:100000000'],
             'currency' => ['nullable', Rule::in(array_keys(config('events.currencies')))],

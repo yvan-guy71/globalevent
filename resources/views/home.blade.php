@@ -43,11 +43,11 @@
                 </div>
 
                 <div class="lg:w-52 relative flex items-center bg-white/10 px-6 py-3 rounded-2xl border-2 border-transparent transition-all focus-within:bg-white/20 focus-within:border-white/60">
-                    <select name="city" class="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-white text-base font-bold appearance-none cursor-pointer">
-                        <option value="" class="text-slate-800">Toutes les villes</option>
-                        @foreach($cities as $city)
-                            <option value="{{ $city }}" class="text-slate-800" {{ request('city') === $city ? 'selected' : '' }}>
-                                {{ $city }}
+                    <select name="country" class="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-white text-base font-bold appearance-none cursor-pointer">
+                        <option value="" class="text-slate-800">Tous les pays</option>
+                        @foreach($countries as $country)
+                            <option value="{{ $country }}" class="text-slate-800" {{ request('country') === $country ? 'selected' : '' }}>
+                                {{ $country }}
                             </option>
                         @endforeach
                     </select>

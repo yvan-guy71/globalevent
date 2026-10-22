@@ -102,7 +102,7 @@ class EventCrudTest extends TestCase
 
         $this->actingAs($user)
             ->from('/evenements/creer')
-            ->post('/evenements', $this->payload(['title' => 'ab', 'type' => 'inconnu', 'city' => 'Paris', 'country' => 'Atlantide']))
+            ->post('/evenements', $this->payload(['title' => 'ab', 'type' => 'inconnu', 'city' => 'VilleInexistante', 'country' => 'Atlantide']))
             ->assertRedirect('/evenements/creer')
             ->assertSessionHasErrors(['title', 'type', 'city', 'country']);
     }
@@ -113,8 +113,8 @@ class EventCrudTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
         Event::factory()->count(2)->create(['user_id' => $user->id]);
 
-        $this->actingAs($user)->get('/admin')->assertForbidden();
-        $this->actingAs($admin)->get('/admin')->assertOk();
+        $this->actingAs($user)->get('/event-admin')->assertForbidden();
+        $this->actingAs($admin)->get('/event-admin')->assertOk();
     }
 
     public function test_event_filters_work(): void

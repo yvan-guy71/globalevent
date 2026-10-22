@@ -3,6 +3,8 @@
     $inputClass = 'w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors';
     $labelClass = 'block text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2';
     $errorClass = 'text-xs font-bold text-rose-600 mt-1';
+    $selectedCountry = old('country', $event->country ?? 'Togo');
+    $countryCities = config('events.cities_by_country')[$selectedCountry] ?? (config('events.cities_by_country')['Togo'] ?? ['Autre']);
 @endphp
 
 <div class="space-y-8">
@@ -92,7 +94,7 @@
             <div>
                 <label for="city" class="{{ $labelClass }}">Ville *</label>
                 <select id="city" name="city" required class="{{ $inputClass }}">
-                    @foreach($cities as $city)
+                    @foreach($countryCities as $city)
                         <option value="{{ $city }}" {{ old('city', $event->city ?? 'Lomé') === $city ? 'selected' : '' }}>
                             {{ $city }}
                         </option>
@@ -103,7 +105,7 @@
 
             <div>
                 <label for="country" class="{{ $labelClass }}">Pays *</label>
-                <select id="country" name="country" required class="{{ $inputClass }}">
+                <select id="country" name="country" required class="{{ $inputClass }}" data-cities='@json(config("events.cities_by_country"))'>
                     @foreach($countries as $country)
                         <option value="{{ $country }}" {{ old('country', $event->country ?? 'Togo') === $country ? 'selected' : '' }}>
                             {{ $country }}
@@ -255,4 +257,37 @@
             @endif
         </div>
     </div>
+
+    <script>
+        (function () {
+            const countrySelect = document.getElementById('country');
+            const citySelect = document.getElementById('city');
+            if (!countrySelect || !citySelect) return;
+
+            let citiesByCountry = {};
+            try {
+                citiesByCountry = JSON.parse(countrySelect.getAttribute('data-cities') || '{}');
+            } catch (e) {
+                citiesByCountry = {};
+            }
+
+            function updateCities(keepSelection) {
+                const cities = citiesByCountry[countrySelect.value] || ['Autre'];
+                const current = keepSelection ? citySelect.value : @json(old('city', $event->city ?? 'Lomé'));
+                citySelect.innerHTML = '';
+                cities.forEach(function (city) {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    if (city === current) option.selected = true;
+                    citySelect.appendChild(option);
+                });
+                if (!cities.includes(current) && cities.length) {
+                    citySelect.options[0].selected = true;
+                }
+            }
+
+            countrySelect.addEventListener('change', function () { updateCities(false); });
+        })();
+    </script>
 </div>

@@ -85,9 +85,20 @@ Route::middleware('guest')->group(function () {
 Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 Route::post('/devenir-organisateur', [AuthController::class, 'becomeOrganizer'])->middleware('auth')->name('become-organizer');
 
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-    Route::get('/utilisateurs', [UserController::class, 'index'])->name('users');
-    Route::put('/utilisateurs/{user}/role', [UserController::class, 'updateRole'])->name('users.role');
-    Route::delete('/utilisateurs/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::prefix('event-admin')->name('admin.')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/connexion', [AuthController::class, 'showAdminLogin'])->name('login');
+        Route::post('/connexion', [AuthController::class, 'adminLogin'])->name('login.post');
+        Route::get('/inscription', [AuthController::class, 'showAdminRegister'])->name('register');
+        Route::post('/inscription', [AuthController::class, 'adminRegister'])->name('register.post');
+    });
+
+    Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+    Route::middleware(\App\Http\Middleware\EnsureAdminAuthenticated::class)->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/utilisateurs', [UserController::class, 'index'])->name('users');
+        Route::put('/utilisateurs/{user}/role', [UserController::class, 'updateRole'])->name('users.role');
+        Route::delete('/utilisateurs/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
 });

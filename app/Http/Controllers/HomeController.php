@@ -47,7 +47,7 @@ class HomeController extends Controller
             'featured' => $featured,
             'upcoming' => $upcoming,
             'stats' => $stats,
-            'cities' => Event::query()->published()->distinct()->orderBy('city')->pluck('city'),
+            'countries' => config('events.countries'),
         ]);
     }
 }

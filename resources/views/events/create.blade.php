@@ -15,6 +15,24 @@
         </div>
     </section>
 
+    <div id="event-type-modal" data-type-modal data-type-picker class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="event-type-title">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+            <h2 id="event-type-title" class="text-2xl font-black text-slate-900 dark:text-white mb-2">Choisir le type d'évènement à créer</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Sélectionnez le type d'évènement que vous souhaitez créer : une compétition ou un autre type.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button type="button" data-event-type="competition" class="type-choice px-6 py-5 rounded-2xl border-2 border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 font-black hover:border-amber-400 transition-colors">
+                    <i class="fa-solid fa-trophy mb-2 block text-2xl"></i>
+                    Compétition
+                </button>
+                <button type="button" data-event-type="autre" class="type-choice px-6 py-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-black hover:border-indigo-400 transition-colors">
+                    <i class="fa-solid fa-calendar-star mb-2 block text-2xl"></i>
+                    Autre
+                </button>
+            </div>
+            <button type="button" data-close-type-modal class="mt-6 w-full px-4 py-3 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">Fermer</button>
+        </div>
+    </div>
+
     <section class="max-w-5xl mx-auto px-4 -mt-12 relative z-10 pb-20">
         @if($errors->any())
             <div class="mb-8 p-5 rounded-2xl bg-rose-50 dark:bg-rose-900/30 border-l-4 border-rose-500 text-rose-700 dark:text-rose-300">
@@ -42,4 +60,25 @@
             </div>
         </form>
     </section>
+
+    @push('scripts')
+    <script>
+        (function () {
+            const modal = document.getElementById('event-type-modal');
+            const typeSelect = document.getElementById('type');
+            document.querySelectorAll('[data-event-type]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const type = btn.getAttribute('data-event-type');
+                    if (typeSelect) typeSelect.value = type === 'autre' ? 'autre' : type;
+                    if (modal) modal.classList.add('hidden');
+                });
+            });
+            document.querySelectorAll('[data-close-type-modal]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    if (modal) modal.classList.add('hidden');
+                });
+            });
+        })();
+    </script>
+    @endpush
 @endsection

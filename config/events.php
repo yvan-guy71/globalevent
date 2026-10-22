@@ -114,9 +114,43 @@ return [
         'Sénégal',
         'Mali',
         'Niger',
+        'Guinée',
+        'Guinée-Bissau',
+        'Gambie',
+        'Libéria',
+        'Sierra Leone',
+        'Cap-Vert',
+        'Mauritanie',
         'Cameroun',
         'France',
         'Autre',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Villes par pays
+    |--------------------------------------------------------------------------
+    */
+    'cities_by_country' => [
+        'Togo' => ['Lomé', 'Tsévié', 'Aného', 'Kpalimé', 'Atakpamé', 'Sokodé', 'Kara', 'Dapaong', 'Bassar', 'Autre'],
+        'Bénin' => ['Cotonou', 'Porto-Novo', 'Parakou', 'Abomey-Calavi', 'Bohicon', 'Natitingou', 'Autre'],
+        'Ghana' => ['Accra', 'Kumasi', 'Tamale', 'Takoradi', 'Cape Coast', 'Autre'],
+        'Côte d\'Ivoire' => ['Abidjan', 'Yamoussoukro', 'Bouaké', 'Daloa', 'San-Pédro', 'Autre'],
+        'Burkina Faso' => ['Ouagadougou', 'Bobo-Dioulasso', 'Koudougou', 'Banfora', 'Autre'],
+        'Nigeria' => ['Lagos', 'Abuja', 'Kano', 'Ibadan', 'Port Harcourt', 'Autre'],
+        'Sénégal' => ['Dakar', 'Thiès', 'Saint-Louis', 'Ziguinchor', 'Touba', 'Autre'],
+        'Mali' => ['Bamako', 'Sikasso', 'Mopti', 'Koutiala', 'Autre'],
+        'Niger' => ['Niamey', 'Zinder', 'Maradi', 'Tahoua', 'Autre'],
+        'Guinée' => ['Conakry', 'Nzérékoré', 'Kankan', 'Kindia', 'Autre'],
+        'Guinée-Bissau' => ['Bissau', 'Bafatá', 'Gabú', 'Autre'],
+        'Gambie' => ['Banjul', 'Serekunda', 'Brikama', 'Autre'],
+        'Libéria' => ['Monrovia', 'Gbarnga', 'Buchanan', 'Autre'],
+        'Sierra Leone' => ['Freetown', 'Bo', 'Kenema', 'Autre'],
+        'Cap-Vert' => ['Praia', 'Mindelo', 'Santa Maria', 'Autre'],
+        'Mauritanie' => ['Nouakchott', 'Nouadhibou', 'Kaédi', 'Autre'],
+        'Cameroun' => ['Yaoundé', 'Douala', 'Bamenda', 'Garoua', 'Autre'],
+        'France' => ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Autre'],
+        'Autre' => ['Autre'],
     ],
 
     /*
