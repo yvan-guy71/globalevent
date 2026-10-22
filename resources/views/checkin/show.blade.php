@@ -2,6 +2,10 @@
 
 @section('title', 'Check-in - '.$event->title)
 
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+@endpush
+
 @section('content')
     <section class="bg-slate-900 pt-16 pb-24 px-4">
         <div class="max-w-5xl mx-auto">
@@ -193,7 +197,7 @@
                     });
                 }
 
-                if (cameraBtn && 'BarcodeDetector' in window && navigator.mediaDevices?.getUserMedia) {
+                if (cameraBtn && navigator.mediaDevices?.getUserMedia) {
                     cameraBtn.addEventListener('click', async function () {
                         let stream;
                         try {
@@ -215,24 +219,7 @@
                         video.srcObject = stream;
                         await video.play();
 
-                        const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
                         let stopped = false;
-
-                        async function detect() {
-                            if (stopped) return;
-                            try {
-                                const codes = await detector.detect(video);
-                                if (codes.length) {
-                                    const raw = codes[0].rawValue || '';
-                                    stopped = true;
-                                    stream.getTracks().forEach(t => t.stop());
-                                    video.remove();
-                                    check(raw);
-                                    return;
-                                }
-                            } catch (e) { /* ignore frame errors */ }
-                            requestAnimationFrame(detect);
-                        }
 
                         const stopHandler = () => {
                             if (stopped) return;
@@ -242,11 +229,59 @@
                         };
 
                         video.addEventListener('click', stopHandler);
-                        requestAnimationFrame(detect);
+
+                        if ('BarcodeDetector' in window) {
+                            const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
+
+                            async function detect() {
+                                if (stopped) return;
+                                try {
+                                    const codes = await detector.detect(video);
+                                    if (codes.length) {
+                                        const raw = codes[0].rawValue || '';
+                                        stopped = true;
+                                        stream.getTracks().forEach(t => t.stop());
+                                        video.remove();
+                                        check(raw);
+                                        return;
+                                    }
+                                } catch (e) { /* ignore frame errors */ }
+                                requestAnimationFrame(detect);
+                            }
+
+                            requestAnimationFrame(detect);
+                        } else if (window.jsQR) {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+
+                            function detect() {
+                                if (stopped) return;
+                                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                                    canvas.width = video.videoWidth;
+                                    canvas.height = video.videoHeight;
+                                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                    const result = window.jsQR(imageData.data, imageData.width, imageData.height);
+                                    if (result && result.data) {
+                                        stopped = true;
+                                        stream.getTracks().forEach(t => t.stop());
+                                        video.remove();
+                                        check(result.data);
+                                        return;
+                                    }
+                                }
+                                requestAnimationFrame(detect);
+                            }
+
+                            requestAnimationFrame(detect);
+                        } else {
+                            show('invalid', 'Lecture caméra indisponible. Utilisez le scan manuel.');
+                            stopHandler();
+                        }
                     });
                 } else if (cameraBtn) {
                     cameraBtn.addEventListener('click', function () {
-                        show('invalid', 'La lecture par caméra n\'est pas supportée sur ce navigateur. Utilisez le scan manuel.');
+                        show('invalid', 'Caméra indisponible. Utilisez le scan manuel.');
                     });
                 }
 

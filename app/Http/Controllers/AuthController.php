@@ -38,7 +38,7 @@ class AuthController extends Controller
 
             return back()
                 ->withInput($request->only('email', 'remember'))
-                ->withErrors(['email' => 'Les administrateurs doivent se connecter via le formulaire admin (/event-admin/connexion).']);
+                ->withErrors(['email' => 'Les administrateurs doivent se connecter via l\'espace administrateur dédié.']);
         }
 
         $request->session()->regenerate();

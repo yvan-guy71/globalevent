@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'required' => 'Le champ :attribute est obligatoire.',
+    'email' => 'Le champ :attribute doit être une adresse e-mail valide.',
+    'unique' => 'Cette valeur est déjà utilisée.',
+    'min' => [
+        'string' => 'Le champ :attribute doit contenir au moins :min caractères.',
+        'numeric' => 'Le champ :attribute doit être au moins :min.',
+    ],
+    'max' => [
+        'string' => 'Le champ :attribute ne doit pas dépasser :max caractères.',
+        'numeric' => 'Le champ :attribute ne doit pas dépasser :max.',
+    ],
+    'confirmed' => 'La confirmation du champ :attribute ne correspond pas.',
+    'accepted' => 'Vous devez accepter ce champ.',
+    'in' => 'La valeur sélectionnée pour :attribute est invalide.',
+    'numeric' => 'Le champ :attribute doit être un nombre.',
+    'integer' => 'Le champ :attribute doit être un entier.',
+    'date' => 'Le champ :attribute doit être une date valide.',
+    'after_or_equal' => 'Le champ :attribute doit être une date postérieure ou égale à :date.',
+    'before_or_equal' => 'Le champ :attribute doit être une date antérieure ou égale à :date.',
+    'image' => 'Le fichier doit être une image.',
+    'mimes' => 'Le fichier doit être de type : :values.',
+    'terms' => 'les conditions d\'utilisation',
+
+    'attributes' => [
+        'title' => 'titre',
+        'type' => 'type',
+        'description' => 'description',
+        'starts_at' => 'date de début',
+        'ends_at' => 'date de fin',
+        'venue' => 'lieu',
+        'city' => 'ville',
+        'country' => 'pays',
+        'price' => 'prix',
+        'capacity' => 'capacité',
+        'email' => 'adresse e-mail',
+        'password' => 'mot de passe',
+        'name' => 'nom',
+        'code' => 'code',
+        'items' => 'billets',
+        'value' => 'vote',
+    ],
+];
