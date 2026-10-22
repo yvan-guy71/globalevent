@@ -245,6 +245,28 @@
                     @endif
                 </div>
 
+                @if(auth()->check())
+                    @php
+                        $myEventTickets = auth()->user()->tickets()->where('event_id', $event->id)->get();
+                    @endphp
+                    @if($myEventTickets->count())
+                        <div class="hidden" aria-hidden="true">
+                            @foreach($myEventTickets as $myTicket)
+                                <span data-qr-download data-code="{{ $myTicket->code }}" data-filename="billet-{{ $myTicket->code }}.png"></span>
+                            @endforeach
+                        </div>
+                        <div class="mt-3">
+                            <button type="button"
+                                    data-qr-download-all
+                                    data-filename="mes-billets-{{ $event->slug }}.zip"
+                                    class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-colors">
+                                <i class="fa-solid fa-file-zipper"></i>
+                                Télécharger mes billets (ZIP)
+                            </button>
+                        </div>
+                    @endif
+                @endif
+
                 <div class="mt-8 space-y-3">
                     @if($event->is_free && !$event->isPast() && auth()->check())
                         <form action="{{ route('events.join', $event) }}" method="POST">
