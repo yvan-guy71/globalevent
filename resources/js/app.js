@@ -75,7 +75,8 @@ document.addEventListener('click', async function (event) {
         return;
     }
 
-    const triggers = Array.from(document.querySelectorAll('[data-qr-download]'));
+    const scope = trigger.closest('[data-qr-scope]') || document;
+    const triggers = Array.from(scope.querySelectorAll('[data-qr-download]'));
     if (!triggers.length) {
         window.alert('Aucun QR code à télécharger.');
         return;
