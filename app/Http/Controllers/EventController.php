@@ -90,6 +90,17 @@ class EventController extends Controller
 
         $event->save();
 
+        $event->ticketTypes()->create([
+            'name' => 'Standard',
+            'description' => 'Billet standard pour l\'évènement.',
+            'price' => $data['price'] ?? 0,
+            'currency' => $data['currency'] ?? 'FCFA',
+            'quantity' => $data['capacity'] ?? 100,
+            'sold' => 0,
+            'is_active' => true,
+            'sort_order' => 0,
+        ]);
+
         $request->user()->promoteToOrganizer();
 
         return redirect()
@@ -172,6 +183,19 @@ class EventController extends Controller
     {
         if ($event->status !== 'published' && !$event->canBeManagedBy(auth()->user())) {
             abort(404);
+        }
+
+        if ($event->ticketTypes()->count() === 0) {
+            $event->ticketTypes()->create([
+                'name' => 'Standard',
+                'description' => 'Billet standard pour l\'évènement.',
+                'price' => $event->price,
+                'currency' => $event->currency ?: 'FCFA',
+                'quantity' => $event->capacity ?: 100,
+                'sold' => 0,
+                'is_active' => true,
+                'sort_order' => 0,
+            ]);
         }
 
         $related = Event::query()
