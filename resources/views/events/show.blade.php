@@ -226,7 +226,7 @@
                     </div>
                     <div class="text-3xl font-black text-slate-900 dark:text-white">{{ $event->price_label }}</div>
                     <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mt-1">
-                        @if($event->capacity)
+                        @if($event->total_places)
                             @if($event->remaining_places <= 0)
                                 Terminé
                             @else
@@ -236,12 +236,12 @@
                             Entrée libre
                         @endif
                     </p>
-                    @if($event->capacity)
-                        @php $placePercent = $event->capacity > 0 ? round(($event->remaining_places / $event->capacity) * 100) : 0; @endphp
+                    @if($event->total_places)
+                        @php $placePercent = $event->total_places > 0 ? round(($event->remaining_places / $event->total_places) * 100) : 0; @endphp
                         <div class="mt-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                             <div class="h-full bg-emerald-600 rounded-full transition-all" style="width: {{ $placePercent }}%"></div>
                         </div>
-                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">{{ $event->remaining_places }} / {{ number_format($event->capacity, 0, ',', ' ') }} places disponibles</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">{{ $event->remaining_places }} / {{ number_format($event->total_places, 0, ',', ' ') }} places disponibles</p>
                     @endif
                 </div>
 

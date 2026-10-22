@@ -39,7 +39,7 @@ class Event extends Model
     /** @use HasFactory<EventFactory> */
     use HasFactory;
 
-    protected $appends = ['image_url', 'is_free', 'type_label', 'status_label'];
+    protected $appends = ['image_url', 'is_free', 'type_label', 'status_label', 'total_places', 'remaining_places'];
 
     protected function casts(): array
     {
@@ -183,8 +183,36 @@ class Event extends Model
         return (float) $this->price <= 0;
     }
 
+    public function getTotalPlacesAttribute(): ?int
+    {
+        $types = $this->ticketTypes;
+
+        if ($types->isNotEmpty()) {
+            if ($types->contains(fn ($type) => $type->quantity === null)) {
+                return null;
+            }
+
+            return (int) $types->sum('quantity');
+        }
+
+        return $this->capacity ?: null;
+    }
+
     public function getRemainingPlacesAttribute(): ?int
     {
+        $types = $this->ticketTypes;
+
+        if ($types->isNotEmpty()) {
+            if ($types->contains(fn ($type) => $type->quantity === null)) {
+                return null;
+            }
+
+            $total = (int) $types->sum('quantity');
+            $sold = (int) $types->sum('sold');
+
+            return max(0, $total - $sold);
+        }
+
         if (! $this->capacity) {
             return null;
         }
