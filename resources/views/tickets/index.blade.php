@@ -60,16 +60,31 @@
                         </a>
 
                         <div class="px-5 pb-5 pt-1">
-                            <button type="button"
-                                    data-qr-download
-                                    data-code="{{ $ticket->code }}"
-                                    data-filename="billet-{{ $ticket->code }}.png"
-                                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
-                                <i class="fa-solid fa-download"></i> Télécharger le QR
-                            </button>
+                            @if($ticket->status === 'valid')
+                                <button type="button"
+                                        data-qr-download
+                                        data-code="{{ $ticket->code }}"
+                                        data-filename="billet-{{ $ticket->code }}.png"
+                                        class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
+                                    <i class="fa-solid fa-download"></i> Télécharger le QR
+                                </button>
+                            @else
+                                <div class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                    <i class="fa-solid fa-ban"></i> Billet déjà utilisé
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endforeach
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button type="button"
+                        data-qr-download-all
+                        data-filename="mes-billets.zip"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-colors">
+                    <i class="fa-solid fa-file-zipper"></i> Télécharger tous les QR codes (ZIP)
+                </button>
             </div>
 
             <div class="mt-10">

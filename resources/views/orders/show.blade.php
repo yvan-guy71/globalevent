@@ -88,15 +88,30 @@
                             <p class="font-mono font-bold text-slate-700 dark:text-slate-200 text-sm break-all">{{ $ticket->code }}</p>
                             <p class="text-xs text-slate-400 mt-2">{{ $ticket->holder() }}</p>
                         </a>
-                        <button type="button"
-                                data-qr-download
-                                data-code="{{ $ticket->code }}"
-                                data-filename="billet-{{ $ticket->code }}.png"
-                                class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
-                            <i class="fa-solid fa-download"></i> Télécharger le QR
-                        </button>
+                        @if($ticket->status === 'valid')
+                            <button type="button"
+                                    data-qr-download
+                                    data-code="{{ $ticket->code }}"
+                                    data-filename="billet-{{ $ticket->code }}.png"
+                                    class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
+                                <i class="fa-solid fa-download"></i> Télécharger le QR
+                            </button>
+                        @else
+                            <div class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                <i class="fa-solid fa-ban"></i> Billet déjà utilisé
+                            </div>
+                        @endif
                     </div>
                 @endforeach
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button type="button"
+                        data-qr-download-all
+                        data-filename="commande-{{ $order->reference }}.zip"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-colors">
+                    <i class="fa-solid fa-file-zipper"></i> Télécharger tous les QR codes (ZIP)
+                </button>
             </div>
         </div>
     </section>

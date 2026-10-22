@@ -64,13 +64,19 @@
                 </div>
 
                 <div class="mt-8 space-y-3">
-                    <button type="button"
-                            data-qr-download
-                            data-code="{{ $ticket->code }}"
-                            data-filename="billet-{{ $ticket->code }}.png"
-                            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-600 text-white font-black rounded-2xl hover:bg-emerald-700 transition-colors">
-                        <i class="fa-solid fa-download"></i> Télécharger le QR code
-                    </button>
+                    @if($ticket->status === 'valid')
+                        <button type="button"
+                                data-qr-download
+                                data-code="{{ $ticket->code }}"
+                                data-filename="billet-{{ $ticket->code }}.png"
+                                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-600 text-white font-black rounded-2xl hover:bg-emerald-700 transition-colors">
+                            <i class="fa-solid fa-download"></i> Télécharger le QR code
+                        </button>
+                    @else
+                        <div class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-black rounded-2xl">
+                            <i class="fa-solid fa-ban"></i> Billet déjà utilisé
+                        </div>
+                    @endif
                     @if($event)
                         <a href="{{ route('events.show', $event) }}"
                            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-colors">
