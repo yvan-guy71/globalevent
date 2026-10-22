@@ -75,10 +75,10 @@
                 </span>
             </li>
             @if($event->capacity)
-                @php $sold = $event->capacity - $event->remaining_places; $percent = $event->capacity > 0 ? round(($sold / $event->capacity) * 100) : 0; @endphp
+                @php $percent = $event->capacity > 0 ? round(($event->remaining_places / $event->capacity) * 100) : 0; @endphp
                 <li>
                     <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-indigo-600 rounded-full transition-all" style="width: {{ $percent }}%"></div>
+                        <div class="h-full bg-emerald-600 rounded-full transition-all" style="width: {{ $percent }}%"></div>
                     </div>
                 </li>
             @endif
