@@ -227,7 +227,11 @@
                     <div class="text-3xl font-black text-slate-900 dark:text-white">{{ $event->price_label }}</div>
                     <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mt-1">
                         @if($event->capacity)
-                            {{ $event->remaining_places }} place{{ $event->remaining_places > 1 ? 's' : '' }} disponible{{ $event->remaining_places > 1 ? 's' : '' }}
+                            @if($event->remaining_places <= 0)
+                                Terminé
+                            @else
+                                {{ $event->remaining_places }} place{{ $event->remaining_places > 1 ? 's' : '' }} disponible{{ $event->remaining_places > 1 ? 's' : '' }}
+                            @endif
                         @else
                             Entrée libre
                         @endif

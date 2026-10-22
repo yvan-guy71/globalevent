@@ -64,7 +64,11 @@
                 <i class="fa-solid fa-user-group text-indigo-500 w-4"></i>
                 <span>
                     @if($event->capacity)
-                        {{ $event->remaining_places }} / {{ number_format($event->capacity, 0, ',', ' ') }} places disponibles
+                        @if($event->remaining_places <= 0)
+                            Terminé
+                        @else
+                            {{ $event->remaining_places }} / {{ number_format($event->capacity, 0, ',', ' ') }} places disponibles
+                        @endif
                     @else
                         Places illimitées
                     @endif
