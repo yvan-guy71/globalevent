@@ -4,7 +4,7 @@
 
 @php
     $image = $event->image_url ?: asset($event->fallback_image);
-    $maxGlobal = 20;
+    $maxGlobal = null;
 @endphp
 
 @section('content')
@@ -53,7 +53,7 @@
                 <div class="divide-y divide-slate-100 dark:divide-slate-800">
                     @foreach($ticketTypes as $type)
                         @php
-                            $limit = $type->is_sold_out ? 0 : min($maxGlobal, $type->remaining ?? $maxGlobal);
+                            $limit = $type->is_sold_out ? 0 : ($type->remaining ?? null);
                         @endphp
                         <div class="px-8 py-6 flex flex-col sm:flex-row sm:items-center gap-4 {{ $type->is_sold_out ? 'opacity-60' : '' }}">
                             <div class="flex-1 min-w-0">
@@ -80,7 +80,7 @@
                                 @if($type->is_sold_out)
                                     <span class="inline-block px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-black text-slate-400">Épuisé</span>
                                 @else
-                                    <input type="number" name="items[{{ $type->id }}]" value="0" min="0" max="{{ $limit }}" data-limit="{{ $limit }}"
+                                    <input type="number" name="items[{{ $type->id }}]" value="0" min="0" @if($limit !== null) max="{{ $limit }}" data-limit="{{ $limit }}" @else data-limit="" @endif
                                            class="w-24 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-bold text-center focus:ring-2 focus:ring-indigo-500 outline-none qty-input">
                                 @endif
                             </div>
@@ -127,8 +127,9 @@
 
                     inputs.forEach(input => {
                         let qty = parseInt(input.value, 10) || 0;
-                        const limit = parseInt(input.dataset.limit, 10) || 20;
-                        if (qty > limit) {
+                        const rawLimit = input.dataset.limit;
+                        const limit = rawLimit === '' ? Infinity : (parseInt(rawLimit, 10) || Infinity);
+                        if (limit !== Infinity && qty > limit) {
                             qty = limit;
                             input.value = limit;
                         }

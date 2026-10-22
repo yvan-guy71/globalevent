@@ -36,7 +36,7 @@ class OrderController extends Controller
 
         $data = $request->validate([
             'items' => ['required', 'array'],
-            'items.*' => ['nullable', 'integer', 'min:0', 'max:20'],
+            'items.*' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $selections = collect($data['items'])
