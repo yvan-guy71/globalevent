@@ -232,6 +232,13 @@
                             Entrée libre
                         @endif
                     </p>
+                    @if($event->capacity)
+                        @php $soldPlaces = $event->capacity - $event->remaining_places; $placePercent = $event->capacity > 0 ? round(($soldPlaces / $event->capacity) * 100) : 0; @endphp
+                        <div class="mt-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-600 rounded-full transition-all" style="width: {{ $placePercent }}%"></div>
+                        </div>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">{{ $soldPlaces }} / {{ number_format($event->capacity, 0, ',', ' ') }} places réservées</p>
+                    @endif
                 </div>
 
                 <div class="mt-8 space-y-3">

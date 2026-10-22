@@ -62,8 +62,22 @@
             </li>
             <li class="flex items-center gap-2">
                 <i class="fa-solid fa-user-group text-indigo-500 w-4"></i>
-                <span>{{ $event->capacity ? number_format($event->capacity, 0, ',', ' ').' places' : 'Places illimitées' }}</span>
+                <span>
+                    @if($event->capacity)
+                        {{ $event->remaining_places }} / {{ number_format($event->capacity, 0, ',', ' ') }} places disponibles
+                    @else
+                        Places illimitées
+                    @endif
+                </span>
             </li>
+            @if($event->capacity)
+                @php $sold = $event->capacity - $event->remaining_places; $percent = $event->capacity > 0 ? round(($sold / $event->capacity) * 100) : 0; @endphp
+                <li>
+                    <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-indigo-600 rounded-full transition-all" style="width: {{ $percent }}%"></div>
+                    </div>
+                </li>
+            @endif
         </ul>
 
         <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
