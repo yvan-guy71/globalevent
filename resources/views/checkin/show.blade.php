@@ -94,6 +94,21 @@
             </div>
         </div>
 
+        <div class="hidden" aria-hidden="true">
+            @foreach($event->tickets as $ticket)
+                <span data-qr-download data-code="{{ $ticket->code }}" data-filename="billet-{{ $ticket->code }}.png"></span>
+            @endforeach
+        </div>
+
+        <div class="flex justify-center">
+            <button type="button"
+                    data-qr-download-all
+                    data-filename="evenement-{{ $event->slug }}.zip"
+                    class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-colors">
+                <i class="fa-solid fa-file-zipper"></i> Télécharger tous les QR codes (ZIP)
+            </button>
+        </div>
+
         <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
             <h2 class="text-lg font-black mb-2 flex items-center gap-3">
                 <i class="fa-solid fa-share-nodes text-indigo-600 dark:text-indigo-400"></i>
